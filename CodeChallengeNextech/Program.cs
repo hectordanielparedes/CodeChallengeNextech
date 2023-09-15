@@ -5,14 +5,24 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<HackerNewsService>();
+builder.Services.AddScoped<ICacheService, CacheService>();
+
 builder.Services.AddStackExchangeRedisCache(redisOptions =>
 {
     string connection = builder.Configuration
         .GetConnectionString("Redis");
     redisOptions.Configuration = connection;
 });
-builder.Services.AddSingleton<HackerNewsService>();
+
+
+//builder.Services.AddScoped<IHttpClientService, HttpClientService>();
+builder.Services.AddHttpClient<HttpClientService>((httpClient) =>
+{
+    httpClient.BaseAddress = new Uri("https://hacker-news.firebaseio.com");
+});
+
 
 var app = builder.Build();
 
