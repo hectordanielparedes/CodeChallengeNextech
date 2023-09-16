@@ -39,7 +39,9 @@
   <tbody>
     <tr *ngFor="let item of newestStories | filter:page:search">
       <td>{{ item.title }}</td>
-      <td><a href="{{ item.url }}" target="_blank">Go to story</a></td>
+      
+      <td *ngIf="item.url;else other_content"><a href="{{ item.url }}" target="_blank">Go to story</a></td>
+      <ng-template #other_content><td class="text-danger">Link unavailable</td></ng-template>
     </tr>
   </tbody>
 </table>

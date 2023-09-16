@@ -27,12 +27,12 @@ export class FetchDataComponent {
   }
 
   nextPage() {
-    this.page += 5;
+    this.page += 10;
   }
 
   prevPage() {
     if ( this.page > 0 )
-      this.page -= 5;
+      this.page -= 10;
   }
 
   onSearchTitle( search: string ) {

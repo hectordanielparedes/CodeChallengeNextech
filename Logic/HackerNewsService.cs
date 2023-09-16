@@ -29,23 +29,20 @@ namespace Logic
             {
                 List<int>? newestStoriesIds = new();
                 var newestStories = new List<ItemResponse>();
-                var newStoriesResponse = await _httpClientService.GetAsync("v0/newstories.json?print=pretty&orderBy=\"$priority\"&limitToFirst=40");
+                var newStoriesResponse = await _httpClientService.GetAsync("v0/newstories.json?print=pretty&orderBy=\"$priority\"&limitToFirst=200");
                 if (newStoriesResponse != null)
                 {
                     newestStoriesIds = newStoriesResponse.Content.ReadFromJsonAsync<List<int>>().Result;
-                }               
-
-                foreach (var id in newestStoriesIds)
-                {
-                    var itemResponse = await _httpClientService.GetAsync($"v0/item/{id}.json?print=pretty");
-                    if (itemResponse != null)
-                    {
-                        var item = itemResponse.Content.ReadFromJsonAsync<ItemResponse>().Result;
-                        newestStories.Add(item);
-                    }
-                    
                 }
 
+                var listResults = new List<string>();
+                Parallel.ForEach(newestStoriesIds, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, id =>
+                {
+                    var response = _httpClientService.GetAsync($"v0/item/{id}.json?print=pretty").Result;
+
+                    var contents = response.Content.ReadFromJsonAsync<ItemResponse>().Result;
+                    newestStories.Add(contents);
+                });
                 var serializedData = JsonSerializer.Serialize(newestStories);
                 await _cache.StringSet("myCachedDataKey", serializedData);
 
