@@ -1,4 +1,5 @@
 using Logic;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,13 +17,20 @@ builder.Services.AddStackExchangeRedisCache(redisOptions =>
     redisOptions.Configuration = connection;
 });
 
+builder.Services.AddScoped(cfg =>
+{
+    string connection = builder.Configuration
+        .GetConnectionString("RedisAzure");
+    IConnectionMultiplexer multiplexer = ConnectionMultiplexer.Connect(connection);
+    return multiplexer.GetDatabase();
+});
 
-//builder.Services.AddScoped<IHttpClientService, HttpClientService>();
-builder.Services.AddHttpClient<HttpClientService>((httpClient) =>
+builder.Services.AddScoped<IHttpClientService, HttpClientService>();
+
+builder.Services.AddHttpClient("hackernews",(httpClient) =>
 {
     httpClient.BaseAddress = new Uri("https://hacker-news.firebaseio.com");
 });
-
 
 var app = builder.Build();
 

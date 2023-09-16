@@ -1,16 +1,16 @@
 ﻿using Logic.Models;
 using System.Net.Http.Json;
-using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
+using StackExchange.Redis;
 
 namespace Logic
 {
     public class HackerNewsService
     {
         private readonly ICacheService _cache;
-        private readonly HttpClientService _httpClientService;
+        private readonly IHttpClientService _httpClientService;
 
-        public HackerNewsService(ICacheService cache, HttpClientService httpClientService)   
+        public HackerNewsService(ICacheService cache, IHttpClientService httpClientService)   
         {
             _cache = cache;
             _httpClientService = httpClientService;
@@ -18,8 +18,9 @@ namespace Logic
 
         public async Task<List<ItemResponse>> GetNewestStories()
         {
-            var cachedData = await _cache.GetStringAsync("myCachedDataKey");
-            if (cachedData != null)
+            RedisValue cachedData = await _cache.StringGet("myCachedDataKey");            
+
+            if (!cachedData.IsNull)
             {
                 var deserializedData = JsonSerializer.Deserialize<List<ItemResponse>>(cachedData);
                 return deserializedData;
@@ -46,7 +47,7 @@ namespace Logic
                 }
 
                 var serializedData = JsonSerializer.Serialize(newestStories);
-                await _cache.SetStringAsync("myCachedDataKey", serializedData);
+                await _cache.StringSet("myCachedDataKey", serializedData);
 
                 return newestStories;
             }

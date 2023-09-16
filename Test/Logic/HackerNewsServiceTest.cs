@@ -15,14 +15,15 @@ namespace Test.Logic
 
             Mock<ICacheService> mockDistributedCache = new();
             HttpClient httpClient = new();
-            Mock<HttpClientService> mockHttpClientService = new(httpClient);
+            Mock<IHttpClientService> mockHttpClientService = new();
 
             
 
-            //mockDistributedCache.Setup(x => x.GetStringAsync(It.IsAny<string>()));
-
             mockDistributedCache.Setup(mock => mock.GetStringAsync(It.IsAny<string>()).Result).Returns<Task<string?>>(null);
-            //mockDistributedCache.Setup(mock => mock.GetStringAsync("myCachedDataKey", CancellationToken.None)).ReturnsAsync<Task<string?>>(null));
+            mockHttpClientService.Setup(mock => mock.GetAsync(It.IsAny<string>())).ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("[]")
+            });
 
             // Arrange
             HackerNewsService hackerNewsService = new(mockDistributedCache.Object, mockHttpClientService.Object);
@@ -31,7 +32,7 @@ namespace Test.Logic
             var response = hackerNewsService.GetNewestStories();
 
             // Assert
-
+            mockDistributedCache.Verify(mock => mock.GetStringAsync("myCachedDataKey"), Times.Once);
         }
     }
 }

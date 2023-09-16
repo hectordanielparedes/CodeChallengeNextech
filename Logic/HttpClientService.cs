@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,16 +9,17 @@ namespace Logic
 {
     public class HttpClientService: IHttpClientService
     {
-        private readonly HttpClient _client;
+        private readonly IHttpClientFactory _factory;
 
-        public HttpClientService(HttpClient client)
+        public HttpClientService(IHttpClientFactory factory)
         {
-            _client = client;
+            _factory = factory;
         }
 
         public async Task<HttpResponseMessage> GetAsync(string url)
         {
-            return await _client.GetAsync(url);
+            var client = _factory.CreateClient("hackernews");
+            return await client.GetAsync(url);
         }
     }
 }
