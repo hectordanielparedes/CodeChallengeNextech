@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, timeout, throwError } from 'rxjs';
+import {FilterPipe} from './filter.pipe'
 
 @Component({
   selector: 'app-home',
