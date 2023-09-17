@@ -1,14 +1,40 @@
-<h1>Hello, world! by Daniel</h1>
-<p>Welcome to your new single-page application, built with:</p>
-<ul>
-  <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-  <li><a href='https://angular.io/'>Angular</a> and <a href='http://www.typescriptlang.org/'>TypeScript</a> for client-side code</li>
-  <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-</ul>
-<p>To help you get started, we've also set up:</p>
-<ul>
-  <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-  <li><strong>Angular CLI integration</strong>. In development mode, there's no need to run <code>ng serve</code>. It runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-  <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration automatically invokes <code>ng build</code> to produce minified, ahead-of-time compiled JavaScript files.</li>
-</ul>
-<p>The <code>ClientApp</code> subdirectory is a standard Angular CLI application. If you open a command prompt in that directory, you can run any <code>ng</code> command (e.g., <code>ng test</code>), or use <code>npm</code> to install extra packages into it.</p>
+<h1 id="tableLabel">Newest Stories</h1>
+
+<p>This component demonstrates fetching data from the HackerAPI.</p>
+
+<p *ngIf="newestStories === []"><em>Loading...</em></p>
+
+<input type="text"
+        class="form-control mb-2"
+        placeholder="Search in Title..."
+        #txtSearch
+        (keyup)="onSearchTitle( txtSearch.value )" />
+
+<button class="btn btn-primary"
+        (click)="prevPage()">
+        Previuos
+</button>
+&nbsp;
+<button class="btn btn-primary"
+        (click)="nextPage()"
+        [disabled]="(newestStories | filter:page:search).length === 0">
+        Next
+</button>
+
+
+<table class='table table-striped' aria-labelledby="tableLabel">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of newestStories | filter:page:search">
+      <td>{{ item.title }}</td>
+      
+      <td *ngIf="item.url;else other_content"><a href="{{ item.url }}" target="_blank">Go to story</a></td>
+      <ng-template #other_content><td class="text-danger">Link unavailable</td></ng-template>
+    </tr>
+  </tbody>
+</table>
