@@ -11,8 +11,8 @@ export class FilterPipe implements PipeTransform {
     if ( search.length === 0 )
       return news.slice(page, page + 10);
     
-    const filteredPokemons = news.filter( item => item.title.includes( search ) );
-    return filteredPokemons.slice(page, page + 10);
+    news = news.filter( item => item.title.includes( search ) );
+    return news.slice(page, page + 10);
 
   }
 
