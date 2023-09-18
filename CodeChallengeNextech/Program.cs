@@ -25,6 +25,7 @@ builder.Services.AddScoped(cfg =>
     return multiplexer.GetDatabase();
 });
 
+builder.Services.AddScoped<IHackerNewsService, HackerNewsService>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 
 builder.Services.AddHttpClient("hackernews",(httpClient) =>

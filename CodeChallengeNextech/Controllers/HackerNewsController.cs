@@ -8,9 +8,9 @@ namespace CodeChallengeNextech.Controllers
     [Route("[controller]")]
     public class HackerNewsController : ControllerBase
     {
-        private readonly HackerNewsService _hackerNewsService;
+        private readonly IHackerNewsService _hackerNewsService;
 
-        public HackerNewsController(HackerNewsService hackerNewsService)
+        public HackerNewsController(IHackerNewsService hackerNewsService)
         {
             _hackerNewsService = hackerNewsService;
         }

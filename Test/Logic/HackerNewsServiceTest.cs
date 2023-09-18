@@ -52,5 +52,7 @@ namespace Test.Logic
             mockDistributedCache.Verify(mock => mock.StringGet("myCachedDataKey"), Times.Once);
             mockDistributedCache.Verify(mock => mock.StringSet("myCachedDataKey", It.IsAny<string>()), Times.Once);
         }
+
+        
     }
 }

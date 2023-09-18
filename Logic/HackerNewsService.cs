@@ -5,7 +5,7 @@ using StackExchange.Redis;
 
 namespace Logic
 {
-    public class HackerNewsService
+    public class HackerNewsService: IHackerNewsService
     {
         private readonly ICacheService _cache;
         private readonly IHttpClientService _httpClientService;
