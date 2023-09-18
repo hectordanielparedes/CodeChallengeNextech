@@ -18,6 +18,7 @@ namespace Logic
 
         public async Task<List<ItemResponse>> GetNewestStories()
         {
+            //var resp = _cache.StringDelete("myCachedDataKey");
             RedisValue cachedData = await _cache.StringGet("myCachedDataKey");            
 
             if (!cachedData.IsNull)
@@ -29,7 +30,8 @@ namespace Logic
             {
                 List<int>? newestStoriesIds = new();
                 var newestStories = new List<ItemResponse>();
-                var newStoriesResponse = await _httpClientService.GetAsync("v0/newstories.json?print=pretty&orderBy=\"$priority\"&limitToFirst=200");
+                //var newStoriesResponse = await _httpClientService.GetAsync("v0/newstories.json?print=pretty&orderBy=\"$priority\"&limitToFirst=200");
+                var newStoriesResponse = await _httpClientService.GetAsync("v0/newstories.json?print=pretty");
                 if (newStoriesResponse != null)
                 {
                     newestStoriesIds = newStoriesResponse.Content.ReadFromJsonAsync<List<int>>().Result;

@@ -42,5 +42,14 @@ namespace Logic
             return await _azureCache.StringSetAsync(key, serializedData,new TimeSpan(0,5,0));
         }
 
+        public bool StringDelete(string key)
+        {
+            if (_azureCache.KeyExists(key))
+            {                
+                return _azureCache.KeyDelete(key); ;
+            }
+            return false;
+        }
+
     }
 }

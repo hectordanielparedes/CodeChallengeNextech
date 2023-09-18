@@ -46,10 +46,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of newestStories | filter:page:itemsPerPage:search">
-        <td>{{ item.title }}</td>
+      <tr *ngFor="let item of newestStories | filter:page:itemsPerPage:search">        
+        <td *ngIf="item && item.title;else else_content">{{ item.title }}</td>
+        <ng-template #else_content><td class="text-danger">Title unavailable</td></ng-template>
         
-        <td *ngIf="item.url;else other_content"><a href="{{ item.url }}" title="{{item.url}}" target="_blank">Go to story</a></td>
+        <td *ngIf="item && item.url;else other_content"><a href="{{ item.url }}" title="{{item.url}}" target="_blank">Go to story</a></td>
         <ng-template #other_content><td class="text-danger">Link unavailable</td></ng-template>
       </tr>
     </tbody>

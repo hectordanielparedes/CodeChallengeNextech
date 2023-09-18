@@ -18,7 +18,7 @@ export class HomeComponent {
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     http.get<Item[]>(baseUrl + 'hackernews').pipe(
-      timeout(50000),
+      timeout(120000),
       catchError((error)=>{
         if (error.name === 'TimeoutError') {
           return throwError('Request timed out. Please try again later.');
@@ -50,7 +50,7 @@ export class HomeComponent {
   }
 
   updateHasMore() {    
-    const filteredItems = this.newestStories.filter( item => item.title.includes( this.search ) );
+    const filteredItems = this.newestStories.filter( item => item && item.title.includes( this.search ) );
 
     const remainingItems = filteredItems.length - (this.page + this.itemsPerPage);
     this.hasMore = remainingItems > 0;
@@ -61,7 +61,7 @@ export class HomeComponent {
 
   getTotalPages(): number {
     const filteredItems = this.newestStories.filter(item =>
-      item.title.includes(this.search)
+      item && item.title.includes(this.search)
     );
     return Math.ceil(filteredItems.length / this.itemsPerPage);
   }

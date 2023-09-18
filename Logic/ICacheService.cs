@@ -1,10 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StackExchange.Redis;
 
 namespace Logic
 {
@@ -14,6 +8,6 @@ namespace Logic
         Task SetStringAsync(string key, string? serializedData);
         Task<RedisValue> StringGet(string key);
         Task<RedisValue> StringSet(string key, string serializedData);
-
+        bool StringDelete(string key);
     }
 }
