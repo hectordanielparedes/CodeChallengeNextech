@@ -50,7 +50,7 @@ export class HomeComponent {
   }
 
   updateHasMore() {    
-    const filteredItems = this.newestStories.filter( item => item && item.title.includes( this.search ) );
+    const filteredItems = this.newestStories.filter( item => item && item.title.toLocaleLowerCase().includes( this.search.toLocaleLowerCase() ) );
 
     const remainingItems = filteredItems.length - (this.page + this.itemsPerPage);
     this.hasMore = remainingItems > 0;
@@ -61,7 +61,7 @@ export class HomeComponent {
 
   getTotalPages(): number {
     const filteredItems = this.newestStories.filter(item =>
-      item && item.title.includes(this.search)
+      item && item.title.toLowerCase().includes(this.search.toLowerCase())
     );
     return Math.ceil(filteredItems.length / this.itemsPerPage);
   }

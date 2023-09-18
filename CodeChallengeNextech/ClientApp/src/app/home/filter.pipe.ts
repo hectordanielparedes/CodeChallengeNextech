@@ -10,7 +10,7 @@ export class FilterPipe implements PipeTransform {
     if ( search.length === 0 )
       return news.slice(page, page + itemsPerPage);
     
-    news = news.filter( item => item.title.includes( search ) );
+    news = news.filter( item => item.title.toLocaleLowerCase().includes( search.toLocaleLowerCase() ) );
     return news.slice(page, page + itemsPerPage);
 
   }
