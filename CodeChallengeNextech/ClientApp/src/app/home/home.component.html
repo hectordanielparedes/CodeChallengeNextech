@@ -2,39 +2,56 @@
 
 <p>This component demonstrates fetching data from the HackerAPI.</p>
 
-<p *ngIf="newestStories === []"><em>Loading...</em></p>
-
-<input type="text"
-        class="form-control mb-2"
-        placeholder="Search in Title..."
-        #txtSearch
-        (keyup)="onSearchTitle( txtSearch.value )" />
-
-<button class="btn btn-primary"
-        (click)="prevPage()">
-        Previuos
-</button>
-&nbsp;
-<button class="btn btn-primary"
+<div *ngIf="isLoading;else other_content" class="text-center mt-4 mb-2" >
+  <p><em>Loading newest stories...</em></p>
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<ng-template #other_content>
+  <div class="col-5">
+    <input type="text"
+      class="form-control mb-2"
+      placeholder="Search in Title..."
+      #txtSearch
+      (keyup)="onSearchTitle( txtSearch.value )"/>
+  </div>
+  
+  <div class="d-flex justify-content-between align-items-center">
+    <button class="btn btn-primary"
+      (click)="prevPage()">
+      Previuos
+    </button>
+    &nbsp;
+    <span>Page {{ getCurrentPage() }} of {{ getTotalPages() }}</span>
+    &nbsp;
+    <button class="btn btn-primary"
         (click)="nextPage()"
         [disabled]="!hasMore">
         Next
-</button>
+    </button>
+    <div class="form-group mb-0 mr-2 col-2">
+    <label for="itemsPerPageSelect">Items per Page:</label>
+    <select class="form-select" id="itemsPerPageSelect" [(ngModel)]="itemsPerPage" (change)="changeItemsPerPage(itemsPerPage)">
+    <option *ngFor="let option of itemsPerPageOptions" [value]="option">{{ option }}</option>
+    </select>
+    </div>
+  </div>
 
-
-<table class='table table-striped' aria-labelledby="tableLabel">
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of newestStories | filter:page:search">
-      <td>{{ item.title }}</td>
-      
-      <td *ngIf="item.url;else other_content"><a href="{{ item.url }}" title="{{item.url}}" target="_blank">Go to story</a></td>
-      <ng-template #other_content><td class="text-danger">Link unavailable</td></ng-template>
-    </tr>
-  </tbody>
-</table>
+  <table class='table table-striped' aria-labelledby="tableLabel">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of newestStories | filter:page:itemsPerPage:search">
+        <td>{{ item.title }}</td>
+        
+        <td *ngIf="item.url;else other_content"><a href="{{ item.url }}" title="{{item.url}}" target="_blank">Go to story</a></td>
+        <ng-template #other_content><td class="text-danger">Link unavailable</td></ng-template>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>

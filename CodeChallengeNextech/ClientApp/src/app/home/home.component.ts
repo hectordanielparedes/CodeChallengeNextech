@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, timeout, throwError } from 'rxjs';
-import {FilterPipe} from './filter.pipe'
 
 @Component({
   selector: 'app-home',
@@ -13,6 +12,9 @@ export class HomeComponent {
   public search: string = '';
   public pageSize: number = 10;
   public hasMore: boolean = true;
+  public isLoading: boolean = true;
+  public itemsPerPageOptions: number[] = [10, 20, 50];
+  public itemsPerPage: number = this.itemsPerPageOptions[0];
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     http.get<Item[]>(baseUrl + 'hackernews').pipe(
@@ -24,20 +26,20 @@ export class HomeComponent {
         return throwError('An error occurred while fetching data.');
       })
     ).subscribe(result => {
-      console.log(result);
       this.newestStories = result;
       this.updateHasMore();
+      this.isLoading = false;
     }, error => console.error(error));
   }
 
   nextPage() {
-    this.page += this.pageSize;
+    this.page = this.page + this.itemsPerPage;
     this.updateHasMore();
   }
 
   prevPage() {
     if ( this.page > 0 )
-      this.page -= this.pageSize;
+      this.page = this.page - this.itemsPerPage;
       this.updateHasMore();
   }
 
@@ -50,8 +52,23 @@ export class HomeComponent {
   updateHasMore() {    
     const filteredItems = this.newestStories.filter( item => item.title.includes( this.search ) );
 
-    const remainingItems = filteredItems.length - (this.page + this.pageSize);
+    const remainingItems = filteredItems.length - (this.page + this.itemsPerPage);
     this.hasMore = remainingItems > 0;
+  }
+  getCurrentPage(): number {
+    return Math.floor(this.page / this.itemsPerPage) + 1;
+  }
+
+  getTotalPages(): number {
+    const filteredItems = this.newestStories.filter(item =>
+      item.title.includes(this.search)
+    );
+    return Math.ceil(filteredItems.length / this.itemsPerPage);
+  }
+  changeItemsPerPage(newItemsPerPage: number = 0) {
+    this.itemsPerPage = Number(newItemsPerPage);
+    this.page = 0;
+    this.updateHasMore();
   }
 
 }

@@ -6,13 +6,12 @@ import {Item} from '../home/home.component';
 })
 export class FilterPipe implements PipeTransform {
 
-  transform( news: Item[], page: number = 0, search: string = '' ): Item[] {
-    //debugger;
+  transform( news: Item[], page: number = 0, itemsPerPage: number = 10, search: string = '' ): Item[] {
     if ( search.length === 0 )
-      return news.slice(page, page + 10);
+      return news.slice(page, page + itemsPerPage);
     
     news = news.filter( item => item.title.includes( search ) );
-    return news.slice(page, page + 10);
+    return news.slice(page, page + itemsPerPage);
 
   }
 
