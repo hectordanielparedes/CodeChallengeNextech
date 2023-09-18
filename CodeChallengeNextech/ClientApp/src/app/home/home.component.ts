@@ -49,8 +49,8 @@ export class HomeComponent {
     this.updateHasMore();
   }
 
-  updateHasMore() {    
-    const filteredItems = this.newestStories.filter( item => item && item.title.toLocaleLowerCase().includes( this.search.toLocaleLowerCase() ) );
+  updateHasMore() {
+    const filteredItems = this.newestStories.filter( item => item && item.title && item.title.toLocaleLowerCase().includes( this.search.toLocaleLowerCase() ) );
 
     const remainingItems = filteredItems.length - (this.page + this.itemsPerPage);
     this.hasMore = remainingItems > 0;
