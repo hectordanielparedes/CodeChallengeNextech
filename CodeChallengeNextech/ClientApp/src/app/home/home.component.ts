@@ -18,7 +18,7 @@ export class HomeComponent {
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     http.get<Item[]>(baseUrl + 'hackernews').pipe(
-      timeout(120000),
+      timeout(180000),
       catchError((error)=>{
         if (error.name === 'TimeoutError') {
           return throwError('Request timed out. Please try again later.');

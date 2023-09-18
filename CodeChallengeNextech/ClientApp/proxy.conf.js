@@ -9,7 +9,7 @@ const PROXY_CONFIG = [
       "/weatherforecast",
       "/hackernews",
    ],
-    proxyTimeout: 50000,
+    proxyTimeout: 180000,
     target: target,
     secure: false,
     headers: {

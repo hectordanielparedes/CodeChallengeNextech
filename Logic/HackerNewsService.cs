@@ -18,7 +18,7 @@ namespace Logic
 
         public async Task<List<ItemResponse>> GetNewestStories()
         {
-            //var resp = _cache.StringDelete("myCachedDataKey");
+            var resp = _cache.StringDelete("myCachedDataKey");
             RedisValue cachedData = await _cache.StringGet("myCachedDataKey");            
 
             if (!cachedData.IsNull)
