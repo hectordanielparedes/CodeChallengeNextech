@@ -16,10 +16,17 @@ namespace CodeChallengeNextech.Controllers
         }
 
         [HttpGet]
-        public async Task<List<ItemResponse>> GetNewestStories()
+        public async Task<IActionResult> GetNewestStories()
         {
-            var resp = await _hackerNewsService.GetNewestStories();
-            return resp;
+            try
+            {
+                var resp = await _hackerNewsService.GetNewestStories();
+                return Ok(resp);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }
