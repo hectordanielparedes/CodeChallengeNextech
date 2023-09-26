@@ -18,7 +18,7 @@ namespace Logic
 
         public async Task<List<ItemResponse>> GetNewestStories()
         {
-            RedisValue cachedData = await _cache.StringGet("myCachedDataKey");            
+            var cachedData = await _cache.StringGet("myCachedDataKey");            
 
             if (!cachedData.IsNull)
             {
@@ -45,14 +45,6 @@ namespace Logic
                         newestStories.Add(content);
                     }
                 }));
-
-                //Parallel.ForEach(newestStoriesIds, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, id =>
-                //{
-                //    var response = _httpClientService.GetAsync($"v0/item/{id}.json?print=pretty").Result;
-
-                //    var contents = response.Content.ReadFromJsonAsync<ItemResponse>().Result;
-                //    newestStories.Add(contents);
-                //});
                 var serializedData = JsonSerializer.Serialize(newestStories);
                 await _cache.StringSet("myCachedDataKey", serializedData);
 
