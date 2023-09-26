@@ -15,7 +15,7 @@ namespace Test.Controller
             // Arrange
             var expectedStories = new List<ItemResponse>
             {
-                new ItemResponse { title = "Test Story 1", url = "https://test.example.com"}
+                new() { title = "Test Story 1", url = "https://test.example.com"}
             };
 
             Mock<IHackerNewsService> mockHackerNewsService = new();

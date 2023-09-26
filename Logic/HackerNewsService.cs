@@ -35,14 +35,24 @@ namespace Logic
                     newestStoriesIds = newStoriesResponse.Content.ReadFromJsonAsync<List<int>>().Result;
                 }
 
-                var listResults = new List<string>();
-                Parallel.ForEach(newestStoriesIds, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, id =>
+                await Task.WhenAll(newestStoriesIds.Select(async id =>
                 {
-                    var response = _httpClientService.GetAsync($"v0/item/{id}.json?print=pretty").Result;
+                    var response = await _httpClientService.GetAsync($"v0/item/{id}.json?print=pretty");
 
-                    var contents = response.Content.ReadFromJsonAsync<ItemResponse>().Result;
-                    newestStories.Add(contents);
-                });
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadFromJsonAsync<ItemResponse>();
+                        newestStories.Add(content);
+                    }
+                }));
+
+                //Parallel.ForEach(newestStoriesIds, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, id =>
+                //{
+                //    var response = _httpClientService.GetAsync($"v0/item/{id}.json?print=pretty").Result;
+
+                //    var contents = response.Content.ReadFromJsonAsync<ItemResponse>().Result;
+                //    newestStories.Add(contents);
+                //});
                 var serializedData = JsonSerializer.Serialize(newestStories);
                 await _cache.StringSet("myCachedDataKey", serializedData);
 
